@@ -17,7 +17,7 @@ import Session from '../models/Session.js';
  */
 export const cleanupExpiredSessions = async () => {
   try {
-    console.log('🧹 Starting session cleanup...');
+    console.log('[INFO] Starting session cleanup...');
     const result = await Session.cleanupExpired();
     return result;
   } catch (error) {
@@ -35,7 +35,7 @@ export const cleanupExpiredSessions = async () => {
  */
 export const deleteOldSessions = async (daysOld = 30) => {
   try {
-    console.log(`🗑️  Deleting inactive sessions older than ${daysOld} days...`);
+    console.log(`[INFO] Deleting inactive sessions older than ${daysOld} days...`);
     const result = await Session.deleteOldSessions(daysOld);
     return result;
   } catch (error) {
@@ -52,7 +52,7 @@ export const deleteOldSessions = async (daysOld = 30) => {
  * @returns {NodeJS.Timeout} Interval reference
  */
 export const startSessionCleanup = (intervalMinutes = 60) => {
-  console.log(`⏰ Session cleanup scheduled every ${intervalMinutes} minutes`);
+  console.log(`[INFO] Session cleanup scheduled every ${intervalMinutes} minutes`);
 
   // Run cleanup immediately on start
   cleanupExpiredSessions().catch(console.error);
