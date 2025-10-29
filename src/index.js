@@ -189,6 +189,35 @@ app.get('/', (req, res) => {
 });
 
 /**
+ * Database Status Endpoint
+ * Check MongoDB connection and database name
+ */
+app.get('/api/status', async (req, res) => {
+  try {
+    const dbName = mongoose.connection.db.databaseName;
+    const isConnected = mongoose.connection.readyState === 1;
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    
+    res.json({
+      status: 'OK',
+      database: {
+        connected: isConnected,
+        name: dbName,
+        collections: collections.map(c => c.name),
+        uri: process.env.MONGODB_URI ? process.env.MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@') : 'Not set'
+      },
+      environment: process.env.NODE_ENV || 'development'
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'ERROR',
+      message: error.message,
+      connected: mongoose.connection.readyState === 1
+    });
+  }
+});
+
+/**
  * Authentication Routes - /api/auth/*
  *
  * Handles user authentication and session management:
